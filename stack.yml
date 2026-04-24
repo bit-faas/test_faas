@@ -1,0 +1,14 @@
+provider:
+  name: openfaas
+  gateway: http://127.0.0.1:8080
+
+functions:
+  need_update_w_faas_name:
+    lang: python3-http-debian
+    handler: ./function
+    image: bit-executor.bitone.in:5000/function:latest
+    min_replicas: 1
+    build_args:
+      ADDITIONAL_PACKAGE: ""
+    environment:
+      DIAGNOSTICS: "false"
