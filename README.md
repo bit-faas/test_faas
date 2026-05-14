@@ -166,4 +166,6 @@ This template is designed to:
 
 - Standardize FaaS development  
 - Reduce manual deployment effort  
-- Enable scalable distributed execution  
+- Enable scalable distributed execution 
+
+#Follw the above steps to achieve the task 
