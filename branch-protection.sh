@@ -9,20 +9,34 @@ ORG="$4"         # GitHub org name
 STACK_FILE="stack.yml"
 
 # --- Step 1: Update stack.yml ---
+#!/bin/bash
+set -e
+
+REPO="$1"
+ADMIN_USER="$2"
+TOKEN="$3"
+ORG="$4"
+
+STACK_FILE="stack.yml"
+
 if [ -f "$STACK_FILE" ]; then
     echo "Updating function name in stack.yml..."
+
     sed -i "s|^[[:space:]]*need_update_w_faas_name:|${REPO}:|g" "$STACK_FILE"
+
     echo "stack.yml updated successfully."
 
-    # Commit and push changes back to GitHub
     git config --global user.name "Jenkins Automation"
     git config --global user.email "jenkins@${ORG}.local"
 
     git add "$STACK_FILE"
-    git commit -m "Update function name in stack.yml to ${REPO}"
-    git push https://${ADMIN_USER}:${TOKEN}@github.com/${ORG}/${REPO}.git HEAD:main
 
-    echo "stack.yml pushed to remote repository."
+    if ! git diff --cached --quiet; then
+        git commit -m "Update function name in stack.yml to ${REPO}"
+        git push https://${ADMIN_USER}:${TOKEN}@github.com/${ORG}/${REPO}.git HEAD:main
+    else
+        echo "No changes detected in stack.yml"
+    fi
 else
     echo "Warning: stack.yml not found, skipping update."
 fi
