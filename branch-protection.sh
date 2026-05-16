@@ -11,7 +11,7 @@ STACK_FILE="stack.yml"
 # --- Step 1: Update stack.yml ---
 if [ -f "$STACK_FILE" ]; then
     echo "Updating function name in stack.yml..."
-    sed -i "s/^[[:space:]]*need_update_w_faas_name:/${REPO}:/g" "$STACK_FILE"
+    sed -i "s|^[[:space:]]*need_update_w_faas_name:|${REPO}:|g" "$STACK_FILE"
     echo "stack.yml updated successfully."
 
     # Commit and push changes back to GitHub
