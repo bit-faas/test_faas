@@ -8,7 +8,6 @@ ORG="$4"         # GitHub org name
 
 # --- Step 1: Update stack.yml ---
 STACK_FILE="stack.yml"
-
 if [ -f "$STACK_FILE" ]; then
     echo "Updating function name in stack.yml..."
 
@@ -43,7 +42,7 @@ curl -X PUT \
       "strict": true,
       "contexts": ["jenkins-ci"]
     },
-    "enforce_admins": true,
+    "enforce_admins": false,
     "required_pull_request_reviews": {
       "dismiss_stale_reviews": true,
       "require_last_push_approval": true,
