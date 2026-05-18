@@ -6,17 +6,7 @@ ADMIN_USER="$2"  # GitHub admin username
 TOKEN="$3"       # GitHub token
 ORG="$4"         # GitHub org name
 
-STACK_FILE="stack.yml"
-
 # --- Step 1: Update stack.yml ---
-#!/bin/bash
-set -e
-
-REPO="$1"
-ADMIN_USER="$2"
-TOKEN="$3"
-ORG="$4"
-
 STACK_FILE="stack.yml"
 
 if [ -f "$STACK_FILE" ]; then
