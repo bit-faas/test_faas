@@ -66,7 +66,7 @@ tasks.create("copySources") {
     }
 }
 
-tasks.create("build") {
+tasks.create("faasBuild") {
     group = "faas"
     description = "Build the faas function image"
     dependsOn("copySources")
@@ -78,7 +78,7 @@ tasks.create("build") {
     }
 }
 
-tasks.create("push") {
+tasks.create("faasPush") {
     group = "faas"
     description = "Push the faas function image"
     doLast {
@@ -89,7 +89,7 @@ tasks.create("push") {
     }
 }
 
-tasks.create("deploy") {
+tasks.create("faasDeploy") {
     group = "faas"
     description = "Deploy the faas function"
     doLast {
