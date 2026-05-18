@@ -1,6 +1,13 @@
 pipeline {
     agent any
 
+    environment {
+        // Derive org and repo from the Git remote URL
+        REMOTE_URL = sh(script: "git config --get remote.origin.url", returnStdout: true).trim()
+        ORG  = sh(script: "echo ${REMOTE_URL} | sed -E 's#https://github.com/([^/]+)/.*#\\1#'", returnStdout: true).trim()
+        REPO = sh(script: "echo ${REMOTE_URL} | sed -E 's#.*/([^/]+)\\.git#\\1#'", returnStdout: true).trim()
+    }
+
     stages {
 
         stage('Init Repo Protection') {
@@ -8,24 +15,17 @@ pipeline {
                 expression { fileExists('.jenkins/first-run.flag') }
             }
             steps {
-                script {
-                    // JOB_NAME usually looks like "org/repo"
-                    def parts    = env.JOB_NAME.tokenize('/')
-                    def orgName  = parts.size() > 1 ? parts[0] : ''
-                    def repoName = parts.last()
-
-                    withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'ADMIN_USER', passwordVariable: 'GITHUB_TOKEN')]) {
-                        sh """
-                            chmod +x branch-protection.sh
-                            ./branch-protection.sh ${repoName} ${ADMIN_USER} ${GITHUB_TOKEN} ${orgName}
-                            rm .jenkins/first-run.flag
-                            git config --global user.name "Jenkins Automation"
-                            git config --global user.email "jenkins@${orgName}.local"
-                            git rm .jenkins/first-run.flag || true
-                            git commit -m "Remove first-run flag after branch protection setup" || true
-                            git push https://${ADMIN_USER}:${GITHUB_TOKEN}@github.com/${orgName}/${repoName}.git HEAD:main || true
-                        """
-                    }
+                withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'ADMIN_USER', passwordVariable: 'GITHUB_TOKEN')]) {
+                    sh """
+                        chmod +x branch-protection.sh
+                        ./branch-protection.sh ${REPO} ${ADMIN_USER} ${GITHUB_TOKEN} ${ORG}
+                        rm .jenkins/first-run.flag
+                        git config --global user.name "Jenkins Automation"
+                        git config --global user.email "jenkins@${ORG}.local"
+                        git rm .jenkins/first-run.flag || true
+                        git commit -m "Remove first-run flag after branch protection setup" || true
+                        git push https://${ADMIN_USER}:${GITHUB_TOKEN}@github.com/${ORG}/${REPO}.git HEAD:main || true
+                    """
                 }
             }
         }
