@@ -40,7 +40,7 @@ curl -X PUT \
   -d '{
     "required_status_checks": {
       "strict": true,
-      "contexts": ["jenkins-ci"]
+      "contexts": ["continuous-integration/jenkins/pr-head"]
     },
     "enforce_admins": false,
     "required_pull_request_reviews": {
