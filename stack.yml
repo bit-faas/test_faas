@@ -6,7 +6,7 @@ functions:
 test_faas:
     lang: python3-http-debian
     handler: ./function
-    image: bit-executor.bitone.in:5000/function:latest
+    image: localhost:5000/function:latest
     min_replicas: 1
     build_args:
       ADDITIONAL_PACKAGE: ""
