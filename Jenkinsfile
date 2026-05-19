@@ -41,7 +41,7 @@ pipeline {
             when {
                 not { expression { fileExists('.jenkins/first-run.flag') } }
             }
-            steps { sh './gradlew build' }
+            steps { sh './gradlew faasBuild' }
         }
 
         stage('Docker Push') {
@@ -51,7 +51,7 @@ pipeline {
                     not { expression { fileExists('.jenkins/first-run.flag') } }
                 }
             }
-            steps { sh './gradlew push' }
+            steps { sh './gradlew faasPush' }
         }
     }
 }
